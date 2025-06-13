@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Cytoscape.js</title>
+    <link rel="stylesheet" href="assets/styles.css">
+    <!-- Prism.js CSS (for syntax highlighting) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+
+    <!-- Prism.js JavaScript (for automatic highlighting) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+</head>
+<body class="dark-theme">
+    <header>
+        <h1 class="main-title">Learning Cytoscape.js</h1>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQvk9E-NlxH3wr0XiSjLrgA3yCRF5GuTpChg&s" alt="Cytoscape.js Logo" class="cytoscape-logo">
+    </header>
+
+    <main class="content">
+        <section class="sidebar">
+            <h2 class="section-heading">Overview</h2>
+            <p>
+                Cytoscape.js is a powerful open-source JavaScript library used for visualizing and analyzing graph-based data.
+                It allows developers to create interactive, customizable, and scalable network visualizations in web applications.
+                The library is part of the larger Cytoscape ecosystem, which includes the Cytoscape desktop application for bioinformatics and other graph-related analyses.
+            </p>
+            <p>
+                Built on modern web technologies, Cytoscape.js supports dynamic graph manipulation, animations, user interactions, and various layout algorithms.
+                It is widely used in fields like bioinformatics, social network analysis, and data visualization.
+            </p>
+
+            <hr class="divider">
+
+            <h2 class="section-heading">Purpose of Cytoscape.js</h2>
+            <p>
+                The primary purpose of Cytoscape.js is to enable developers to easily create, manipulate, and visualize complex networks in web applications. Some key objectives include:
+            </p>
+            <ul>
+                <li><strong>Graph Visualization</strong> – Display large-scale networks interactively.</li>
+                <li><strong>Customization</strong> – Offers extensive styling and layout options for graphs.</li>
+                <li><strong>Interactivity</strong> – Supports user interactions like zooming, panning, and selecting nodes/edges.</li>
+                <li><strong>Algorithm Support</strong> – Includes built-in layout and graph analysis algorithms.</li>
+                <li><strong>Performance</strong> – Optimized for handling large graphs efficiently.</li>
+                <li><strong>Integration</strong> – Can be used with various frameworks (React, Angular, Vue) and other libraries like D3.js.</li>
+            </ul>
+
+            <hr class="divider">
+
+            <h2 class="section-heading">Installing and Configuring Cytoscape.js</h2>
+
+            <h3 class="subheading">1. Using via CDN (Recommended for Quick Use)</h3>
+            <p>The easiest way to use Cytoscape.js in a web project is by including it via a CDN.</p>
+            
+            <div class="code-container">
+                <button class="copy-btn">
+                    <span class="copy-icon">📋</span> Copy
+                </button>
+                <pre><code>&lt;script src="https://unpkg.com/cytoscape@3.28.0/dist/cytoscape.min.js"&gt;&lt;/script&gt;</code></pre>
+            </div>
+
+            <h3 class="subheading">2. Installing via NPM (For Node.js & Modern Web Apps)</h3>
+            <p>If you’re working with Node.js, React, or other modern frameworks, installing via npm is recommended.</p>
+            
+            <div class="code-container">
+                <button class="copy-btn">
+                    <span class="copy-icon">📋</span> Copy
+                </button>
+                <pre><code>npm install cytoscape</code></pre>
+            </div>
+
+            <h3 class="subheading">3. Using Cytoscape.js with ES Modules</h3>
+            <p>If your project supports ES Modules, you can directly import Cytoscape.js.</p>
+
+            <div class="code-container">
+                <button class="copy-btn">
+                    <span class="copy-icon">📋</span> Copy
+                </button>
+                <pre><code>import cytoscape from 'https://unpkg.com/cytoscape@3.28.0/dist/cytoscape.esm.min.js';
+console.log(cytoscape);</code></pre>
+            </div>
+
+            <hr class="divider">
+
+            <h2 class="section-heading">Key Features and Explanation</h2>
+
+            <h3>1️⃣ <span class="deep-maroon-heading">Graph Visualization & Layouts</span></h3>
+            <ul>
+                <li>Supports various graph layouts (grid, circle, breadth-first, etc.).</li>
+                <li>Provides real-time updates and animations.</li>
+            </ul>
+            
+            <h4>🌿 <span class="emerald-green-heading">Example 1: Draggable Node</span></h4>
+            <div class="code-container">
+                <button class="copy-btn">
+                    <span class="copy-icon">📋</span> Copy
+                </button>
+                <button class="run-btn">Run</button>
+                <pre><code class="language-html">
+            &lt;!DOCTYPE html&gt;
+            &lt;html lang="en"&gt;
+            &lt;head&gt;
+            &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.24.0/cytoscape.min.js"&gt;&lt;/script&gt;
+            &lt;style&gt; #cy { width: 100%; height: 500px; border: 1px solid black; } &lt;/style&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+                &lt;div id="cy"&gt;&lt;/div&gt;
+                &lt;script&gt;
+                    document.addEventListener("DOMContentLoaded", function() {
+                        var cy = cytoscape({
+                            container: document.getElementById('cy'),
+                            elements: [
+                                { data: { id: 'A' }, position: { x: 100, y: 200 } },
+                                { data: { id: 'B' }, position: { x: 300, y: 100 } },
+                                { data: { id: 'C' }, position: { x: 500, y: 200 } },
+                                { data: { id: 'AB', source: 'A', target: 'B' } },
+                                { data: { id: 'BC', source: 'B', target: 'C' } },
+                                { data: { id: 'CA', source: 'C', target: 'A' } }
+                            ],
+                            style: [{ selector: 'node', style: { 'background-color': '#007bff', 'label': 'data(id)', 'color': '#fff' } }],
+                            layout: { name: 'preset' }
+                        });
+                        cy.nodes().forEach(node => node.grabbable(true));
+                    });
+                &lt;/script&gt;
+            &lt;/body&gt;
+            &lt;/html&gt;
+                </code></pre>
+                <div class="output-container"></div>
+            </div>
+            <p><strong>Explanation:</strong> The code creates an interactive graph using Cytoscape.js, displaying three nodes (A, B, C) connected by edges in a triangular layout. Nodes are blue with white labels, and edges are gray with arrows. The graph allows dragging nodes, as well as zooming and panning for better exploration. The layout is preset, meaning nodes start at fixed positions but can be moved freely.</p>
+            
+            <h4>🌿 <span class="emerald-green-heading">Example 2: Adding and Removing Nodes</span></h4>
+            <div class="code-container">
+                <button class="copy-btn">
+                    <span class="copy-icon">📋</span> Copy
+                </button>
+                <button class="run-btn">Run</button>
+                <pre><code class="language-html">
+            &lt;!DOCTYPE html&gt;
+            &lt;html lang="en"&gt;
+            &lt;head&gt;
+                &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.21.0/cytoscape.min.js"&gt;&lt;/script&gt;
+                &lt;style&gt; #cy { width: 100%; height: 500px; border: 1px solid black; } &lt;/style&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+                &lt;button onclick="addNode()"&gt;Add Node&lt;/button&gt;
+                &lt;button onclick="removeNode()"&gt;Remove Node&lt;/button&gt;
+                &lt;div id="cy"&gt;&lt;/div&gt;
+                &lt;script&gt;
+                    let count = 1;
+                    let cy = cytoscape({
+                        container: document.getElementById('cy'),
+                        elements: [{ data: { id: 'A' } }],
+                        style: [{ selector: 'node', style: { 'background-color': 'green', 'label': 'data(id)', 'color': 'white' } }],
+                        layout: { name: 'grid' }
+                    });
+            
+                    function addNode() {
+                        let newId = 'N' + count++;
+                        cy.add({ data: { id: newId } });
+                        cy.layout({ name: 'grid', animate: true }).run();
+                    }
+            
+                    function removeNode() {
+                        let nodes = cy.nodes();
+                        if (nodes.length > 0) nodes[nodes.length - 1].remove();
+                    }
+                &lt;/script&gt;
+            &lt;/body&gt;
+            &lt;/html&gt;
+                </code></pre>
+                <div class="output-container"></div>
+            </div>
+            <p><strong>Explanation:</strong> The code creates a dynamic interactive graph using Cytoscape.js, allowing users to add and remove nodes dynamically.</p>
+            <ul>
+                <li><strong>Graph Container:</strong> A div (#cy) displays the graph.</li>
+                <li><strong>Initial Setup:</strong> The graph starts with one green node (“A”) in a grid layout.</li>
+                <li><strong>Buttons for Interaction:</strong></li>
+                <ul>
+                    <li>“Add Node”: Adds a new node (N1, N2, ...) with a unique ID and re-arranges the layout.</li>
+                    <li>“Remove Node”: Deletes the last-added node.</li>
+                </ul>
+                <li><strong>Styling:</strong> Nodes are green with white labels.</li>
+                <li><strong>Interactivity:</strong> Users can dynamically modify the graph by adding or removing nodes, and the layout updates automatically.</li>
+            </ul>
+            
+            <h4>🌿 <span class="emerald-green-heading">Example 3: Dynamic Switching Between Different Layouts</span></h4>
+            <div class="code-container">
+                <button class="copy-btn">
+                    <span class="copy-icon">📋</span> Copy
+                </button>
+                <button class="run-btn">Run</button>
+                <pre><code class="language-html">
+            &lt;!DOCTYPE html&gt;
+            &lt;html lang="en"&gt;
+            &lt;head&gt;
+                &lt;script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"&gt;&lt;/script&gt;
+                &lt;style&gt; 
+                    #cy { width: 90vw; height: 70vh; border: 2px solid #ccc; background: white; } 
+                &lt;/style&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+                &lt;button onclick="setLayout('grid')"&gt;Grid&lt;/button&gt;
+                &lt;button onclick="setLayout('circle')"&gt;Circular&lt;/button&gt;
+                &lt;button onclick="setLayout('breadthfirst')"&gt;Linear&lt;/button&gt;
+                &lt;div id="cy"&gt;&lt;/div&gt;
+                
+                &lt;script&gt;
+                    let cy = cytoscape({
+                        container: document.getElementById('cy'),
+                        elements: [
+                            // Nodes
+                            { data: { id: 'A' } }, { data: { id: 'B' } }, { data: { id: 'C' } },
+                            { data: { id: 'D' } }, { data: { id: 'E' } }, { data: { id: 'F' } },
+                            { data: { id: 'G' } }, { data: { id: 'H' } }, { data: { id: 'I' } },
+                            { data: { id: 'J' } },
+                            
+                            // Edges
+                            { data: { source: 'A', target: 'B' } },
+                            { data: { source: 'B', target: 'C' } },
+                            { data: { source: 'C', target: 'D' } },
+                            { data: { source: 'D', target: 'E' } },
+                            { data: { source: 'E', target: 'F' } },
+                            { data: { source: 'F', target: 'G' } },
+                            { data: { source: 'G', target: 'H' } },
+                            { data: { source: 'H', target: 'I' } },
+                            { data: { source: 'I', target: 'J' } },
+                            { data: { source: 'J', target: 'A' } } // Completing the loop
+                        ],
+                        style: [{ 
+                            selector: 'node', 
+                            style: { 
+                                'background-color': '#007bff', 
+                                'label': 'data(id)', 
+                                'color': '#fff' 
+                            } 
+                        }],
+                        layout: { name: 'grid' }
+                    });
+            
+                    function setLayout(layoutName) {
+                        cy.layout({ name: layoutName }).run();
+                    }
+                &lt;/script&gt;
+            &lt;/body&gt;
+            &lt;/html&gt;
+                </code></pre>
+                <div class="output-container"></div>
+            </div>
+            <p><strong>Explanation:</strong> The code creates an interactive graph using Cytoscape.js, allowing users to switch between different node layouts dynamically.</p>
+            <ul>
+                <li><strong>Graph Setup:</strong></li>
+                <ul>
+                    <li>Contains 8 nodes (A to H) connected by edges.</li>
+                    <li>Nodes are blue with white labels and circular in shape.</li>
+                    <li>Edges are gray with arrowheads.</li>
+                </ul>
+                <li><strong>Layout Switching:</strong></li>
+                <ul>
+                    <li>Three buttons allow users to change the node arrangement:</li>
+                    <ul>
+                        <li>Grid Layout</li>
+                        <li>Circular Layout</li>
+                        <li>Linear (Breadth-First) Layout</li>
+                    </ul>
+                </ul>
+                <li><strong>Interactivity:</strong> Clicking a button updates the graph’s structure in real-time. 🚀</li>
+            </ul>
+            <div class="output-container"></div>
+            <hr class="divider">
+
+            <h3>2️⃣ <span class="deep-maroon-heading">Interactive Graph with Click Events</span></h3>
+            <ul>
+                <li>Click on a node to display an alert with its name.</li>
+                <li>Nodes are styled with a blue background and white labels.</li>
+                <li>Edges have arrows and are styled in gray.</li>
+            </ul>
+            
+            <h4>Example: Clickable Nodes</h4>
+            <div class="code-container">
+                <button class="copy-btn">
+                    <span class="copy-icon">📋</span> Copy
+                </button>
+                <button class="run-btn">Run</button>
+                <pre><code class="language-html">
+            &lt;!DOCTYPE html&gt;
+            &lt;html lang="en"&gt;
+            &lt;head&gt;
+                &lt;meta charset="UTF-8"&gt;
+                &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+                &lt;title>Cytoscape.js Click Event Example&lt;/title&gt;
+                &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.24.0/cytoscape.min.js"&gt;&lt;/script&gt;
+                &lt;style&gt;
+                    #cy {
+                        width: 600px;
+                        height: 400px;
+                        border: 1px solid black;
+                    }
+                    h2 {
+                        color: white; /* Change this to any color */
+                    }
+                    
+                &lt;/style&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+            
+                &lt;h2>Cytoscape.js Click Event Example&lt;/h2&gt;
+                &lt;div id="cy"&gt;&lt;/div&gt;
+            
+                &lt;script&gt;
+                    // Initialize Cytoscape
+                    var cy = cytoscape({
+                        container: document.getElementById('cy'), // Graph container
+                        
+                        elements: [ // Define nodes and edges
+                            { data: { id: 'A' } },
+                            { data: { id: 'B' } },
+                            { data: { id: 'C' } },
+                            { data: { id: 'D' } },
+                            { data: { id: 'E' } },
+                            { data: { id: 'AB', source: 'A', target: 'B' } },
+                            { data: { id: 'BC', source: 'B', target: 'C' } },
+                            { data: { id: 'CD', source: 'C', target: 'D' } },
+                            { data: { id: 'DE', source: 'D', target: 'E' } }
+                        ],
+            
+                        style: [ // Styling for nodes and edges
+                            {
+                                selector: 'node',
+                                style: {
+                                    'background-color': '#3498db',
+                                    'label': 'data(id)',
+                                    'color': 'white',
+                                    'text-valign': 'center',
+                                    'text-halign': 'center',
+                                    'font-size': '14px'
+                                }
+                            },
+                            {
+                                selector: 'edge',
+                                style: {
+                                    'width': 2,
+                                    'line-color': '#95a5a6',
+                                    'target-arrow-shape': 'triangle',
+                                    'target-arrow-color': '#95a5a6'
+                                }
+                            }
+                        ],
+            
+                        layout: {
+                            name: 'grid',
+                            rows: 2
+                        }
+                    });
+            
+                    // Click event listener for nodes
+                    cy.on('tap', 'node', function(evt){
+                        var node = evt.target;
+                        alert('You clicked on ' + node.id());
+                    });
+                &lt;/script&gt;
+            
+            &lt;/body&gt;
+            &lt;/html&gt;
+                </code></pre>
+                <div class="output-container"></div>
+            </div>
+            
+            <p><strong>Explanation:</strong></p>
+            <ul>
+                <li><strong>Cytoscape.js Library:</strong> Included via CDN (`cytoscape.min.js`).</li>
+                <li><strong>Graph Container:</strong> The `<div id="cy">` holds the graph.</li>
+                <li><strong>Graph Elements:</strong> Nodes (A–E) and edges are pre-defined.</li>
+                <li><strong>Styling:</strong> Blue nodes with white text, gray edges with arrows.</li>
+                <li><strong>Layout:</strong> Uses a **grid layout** for organized node placement.</li>
+                <li><strong>Click Event (tap):</strong> Clicking a node triggers an **alert** showing its ID.</li>
+            </ul>
+            <hr class="divider">
+            <h3>3️⃣ <span class="deep-maroon-heading">Animated Force-Directed Layout</span></h3>
+            <p>🎢 Nodes naturally spread out using a physics-based force-directed layout.</p>
+            
+            <div class="code-container">
+                <button class="copy-btn">
+                    <span class="copy-icon">📋</span> Copy
+                </button>
+                <button class="run-btn">Run</button>
+                <pre><code class="language-html">
+            &lt;!DOCTYPE html&gt;
+            &lt;html lang="en"&gt;
+            &lt;head&gt;
+                &lt;meta charset="UTF-8"&gt;
+                &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+                &lt;title&gt;Cytoscape.js CoSE Layout&lt;/title&gt;
+                &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.24.0/cytoscape.min.js"&gt;&lt;/script&gt;
+                &lt;style&gt;
+                    #cy {
+                        width: 600px;
+                        height: 400px;
+                        border: 1px solid black;
+                    }
+                    h2 {
+                        color: white; /* Change this to any color */
+                    }
+                &lt;/style&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+            
+                &lt;h2&gt;Cytoscape.js CoSE Layout Example&lt;/h2&gt;
+                &lt;div id="cy"&gt;&lt;/div&gt;
+            
+                &lt;script&gt;
+                    // Initialize Cytoscape
+                    var cy = cytoscape({
+                        container: document.getElementById('cy'), // Graph container
+            
+                        elements: [ // Nodes and edges
+                            { data: { id: 'A' } },
+                            { data: { id: 'B' } },
+                            { data: { id: 'C' } },
+                            { data: { id: 'D' } },
+                            { data: { id: 'E' } },
+                            { data: { id: 'AB', source: 'A', target: 'B' } },
+                            { data: { id: 'BC', source: 'B', target: 'C' } },
+                            { data: { id: 'CD', source: 'C', target: 'D' } },
+                            { data: { id: 'DE', source: 'D', target: 'E' } }
+                        ],
+            
+                        style: [ // Styling nodes and edges
+                            {
+                                selector: 'node',
+                                style: {
+                                    'background-color': '#e74c3c',
+                                    'label': 'data(id)',
+                                    'color': 'white',
+                                    'text-valign': 'center',
+                                    'text-halign': 'center',
+                                    'font-size': '14px'
+                                }
+                            },
+                            {
+                                selector: 'edge',
+                                style: {
+                                    'width': 2,
+                                    'line-color': '#2c3e50',
+                                    'target-arrow-shape': 'triangle',
+                                    'target-arrow-color': '#2c3e50'
+                                }
+                            }
+                        ]
+                    });
+            
+                    // Apply CoSE Layout
+                    cy.layout({
+                        name: 'cose', // Force-directed layout
+                        animate: true // Animates the layout transition
+                    }).run();
+                &lt;/script&gt;
+            
+            &lt;/body&gt;
+            &lt;/html&gt;
+                </code></pre>
+                <div class="output-container"></div>
+            </div>
+            
+            <h4>Explanation of the Code:</h4>
+            <ul>
+                <li><strong>1️⃣ Cytoscape Initialization (`cytoscape({...})`):</strong>
+                    <ul>
+                        <li>Creates a graph with a set of **nodes** and **edges**.</li>
+                        <li>Nodes are labeled with their **IDs** and styled with **red backgrounds**.</li>
+                        <li>Edges are styled with a **dark gray color** and **arrowheads**.</li>
+                    </ul>
+                </li>
+                <li><strong>2️⃣ Applying the CoSE Layout (`cy.layout({...}).run()`):</strong>
+                    <ul>
+                        <li>The **CoSE (Compound Spring Embedder) layout** is a **force-directed layout**.</li>
+                        <li>It automatically **arranges nodes in an organic manner**.</li>
+                        <li>`animate: true` enables **smooth transitions** when applying the layout.</li>
+                    </ul>
+                </li>
+                <li><strong>3️⃣ Why Use CoSE Layout?</strong>
+                    <ul>
+                        <li>Unlike **grid** or **circle** layouts, **CoSE dynamically arranges nodes** based on **physics-like forces** (spring forces between connected nodes).</li>
+                        <li>It is **ideal for large graphs** because it **minimizes edge crossings**.</li>
+                    </ul>
+                </li>
+            </ul>
+            <hr class="divider">
+            <h3>4️⃣ <span class="deep-maroon-heading">Styling Nodes Based on Data Properties</span></h3>
+            <p>🎨 Change node color dynamically using JSON data.</p>
+            
+            <div class="code-container">
+                <button class="copy-btn">
+                    <span class="copy-icon">📋</span> Copy
+                </button>
+                <pre><code class="language-javascript">
+            &lt;script&gt;
+                cy.style().selector('node').style({
+                    'background-color': function(ele){
+                        return ele.data('id') === 'A' ? 'red' : 'green';
+                    }
+                }).update();
+            &lt;/script&gt;
+                </code></pre>
+            </div>
+            
+            <h4>✨ Output:</h4>
+            <ul>
+                <li>🔴 **Node A turns red**, while all other nodes remain **green**.</li>
+                <li>🎯 Great for **highlighting important elements dynamically**.</li>
+            </ul>
+            <hr class="divider">
+            <h3>5️⃣ <span class="deep-maroon-heading">Export Graph as an Image</span></h3>
+            <p>📸 Save the graph as a PNG image with a button click.</p>
+            
+            <div class="code-container">
+                <button class="copy-btn">
+                    <span class="copy-icon">📋</span> Copy
+                </button>
+                <pre><code class="language-javascript">
+            &lt;script&gt;
+                function download() {
+                    var png = cy.png(); // Get PNG data
+                    var link = document.createElement('a');
+                    link.setAttribute('href', png);
+                    link.setAttribute('download', 'graph.png');
+                    link.click();
+                }
+            &lt;/script&gt;
+                </code></pre>
+            </div>
+            
+            <h4>✨ Output:</h4>
+            <ul>
+                <li>📥 Clicking the button **downloads the current graph as an image**.</li>
+                <li>📊 Perfect for **report generation and presentations**.</li>
+            </ul>
+            <hr class="divider">
+            <h2 class="fancy-heading" style="margin-top: 20px;">Use Cases</h2>
+
+            <h3>🔬 Biological & Biomedical Network Analysis</h3>
+            <ul>
+                <li><span class="indented">✅ Protein-protein interaction (PPI) visualization</span></li>
+                <li><span class="indented">✅ Metabolic pathways and gene regulatory networks</span></li>
+                <li><span class="indented">✅ Disease-gene association studies in bioinformatics</span></li>
+            </ul>
+            
+            <h3>🌐 Social Network Analysis</h3>
+            <ul>
+                <li><span class="indented">✅ Mapping relationships between users in social media</span></li>
+                <li><span class="indented">✅ Identifying influential nodes using centrality measures</span></li>
+                <li><span class="indented">✅ Studying online communities and behavior patterns</span></li>
+            </ul>
+            
+            <h3>🧠 Knowledge Graphs & Semantic Web</h3>
+            <ul>
+                <li><span class="indented">✅ Visualizing knowledge graphs (e.g., Wikidata, DBpedia)</span></li>
+                <li><span class="indented">✅ Browsing linked data and ontology structures</span></li>
+                <li><span class="indented">✅ Representing entity relationships in AI & NLP applications</span></li>
+            </ul>
+            
+            <h3>🔐 IT & Cybersecurity</h3>
+            <ul>
+                <li><span class="indented">✅ Mapping computer networks & cloud architectures</span></li>
+                <li><span class="indented">✅ Analyzing cyberattack patterns & threat intelligence</span></li>
+                <li><span class="indented">✅ Visualizing blockchain networks & smart contracts</span></li>
+            </ul>
+            
+            <h3>🚗 Pathfinding & Graph Algorithms</h3>
+            <ul>
+                <li><span class="indented">✅ Implementing shortest path algorithms (Dijkstra, A*)</span></li>
+                <li><span class="indented">✅ Analyzing transportation networks (roads, railways, flights)</span></li>
+                <li><span class="indented">✅ Optimizing logistics & supply chain operations</span></li>
+            </ul>
+            
+            <h3>📊 Business Intelligence & Organizational Mapping</h3>
+            <ul>
+                <li><span class="indented">✅ Representing organizational hierarchies & workflows</span></li>
+                <li><span class="indented">✅ Analyzing customer relationships & marketing strategies</span></li>
+                <li><span class="indented">✅ Detecting fraud in financial transaction networks</span></li>
+            </ul>
+            
+            <h3>🤖 Data Science & Machine Learning</h3>
+            <ul>
+                <li><span class="indented">✅ Visualizing decision trees, neural networks, and clustering results</span></li>
+                <li><span class="indented">✅ Exploring high-dimensional data using graph-based visualization</span></li>
+                <li><span class="indented">✅ Understanding feature relationships in predictive models</span></li>
+            </ul>
+            
+            <h3>⚛ Physics & Chemistry Simulations</h3>
+            <ul>
+                <li><span class="indented">✅ Modeling atomic structures & molecular interactions</span></li>
+                <li><span class="indented">✅ Visualizing forces & energy distributions in physics research</span></li>
+                <li><span class="indented">✅ Simulating ecological or climate networks</span></li>
+            </ul>
+            <!-- A Real-Life Example -->
+            <h2 class="fancy-heading">A Real-Life Example</h2>
+            
+            <!-- Code Snippet with Run & Copy -->
+            <div class="code-container">
+                <button class="copy-btn">
+                    <span class="copy-icon">📋</span> Copy
+                </button>
+                <button class="run-btn">▶ Run</button>
+                <pre><code class="language-html">
+                    &lt;!DOCTYPE html&gt;
+                    &lt;html lang="en"&gt;
+                    &lt;head&gt;
+                        &lt;meta charset="UTF-8"&gt;
+                        &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+                        &lt;title&gt;Interactive Cytoscape Graph&lt;/title&gt;
+                        &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.25.0/cytoscape.min.js"&gt;&lt;/script&gt;
+                        &lt;style&gt;
+                            body { font-family: Arial, sans-serif; }
+                            #cy { width: 100%; height: 500px; border: 1px solid black; }
+                            .tooltip {
+                                position: absolute;
+                                background: rgba(0, 0, 0, 0.7);
+                                color: white;
+                                padding: 5px;
+                                border-radius: 5px;
+                                font-size: 12px;
+                                display: none;
+                            }
+                            h2 {
+                                color: white; /* Change this to any color */
+                            }
+                        &lt;/style&gt;
+                    &lt;/head&gt;
+                    &lt;body&gt;
+            
+                        &lt;h2&gt;Interactive Cytoscape.js Graph&lt;/h2&gt;
+                        &lt;div id="cy"&gt;&lt;/div&gt;
+            
+                        &lt;script&gt;
+                            let cy = cytoscape({
+                                container: document.getElementById('cy'),
+                                elements: generateRandomGraph(20, 40),
+                                style: [
+                                    { selector: 'node', style: { 'background-color': '#007bff', 'label': 'data(label)', 'font-size': '12px', 'text-valign': 'center', 'color': 'white', 'text-outline-width': 2, 'text-outline-color': 'black', 'width': '40px', 'height': '40px', 'shape': 'ellipse', 'border-width': 2, 'border-color': '#000' } },
+                                    { selector: 'node.hovered', style: { 'background-color': 'green', 'width': '50px', 'height': '50px', 'border-width': 4, 'border-color': 'rgba(0, 255, 0, 0.8)' } },
+                                    { selector: 'edge', style: { 'line-color': '#ccc', 'width': 'mapData(weight, 1, 10, 2, 8)', 'curve-style': 'bezier', 'label': 'data(weight)', 'font-size': '10px', 'text-outline-width': 2, 'text-outline-color': 'white' } },
+                                    { selector: ':selected', style: { 'border-width': 3, 'border-color': 'red' } },
+                                    { selector: '.highlighted', style: { 'background-color': 'yellow', 'line-color': 'yellow', 'transition-duration': '0.5s' } }
+                                ],
+                                layout: { name: 'cose', animate: true }
+                            });
+            
+                            function generateRandomGraph(nodeCount, edgeCount) {
+                                let nodes = [], edges = [];
+                                for (let i = 0; i < nodeCount; i++) {
+                                    nodes.push({ data: { id: `S${i}`, label: `Sector ${i+1}` } });
+                                }
+                                for (let i = 0; i < edgeCount; i++) {
+                                    let src = `S${Math.floor(Math.random() * nodeCount)}`;
+                                    let tgt = `S${Math.floor(Math.random() * nodeCount)}`;
+                                    if (src !== tgt) edges.push({ data: { id: `${src}-${tgt}`, source: src, target: tgt, weight: Math.floor(Math.random() * 10) + 1 } });
+                                }
+                                return { nodes, edges };
+                            }
+                        &lt;/script&gt;
+            
+                    &lt;/body&gt;
+                    &lt;/html&gt;
+                </code></pre>
+            </div>
+            
+            <!-- Real-World Applications -->
+            <p>The provided Cytoscape.js code creates an interactive graph visualization where nodes represent different “sectors” and edges represent weighted connections between them. This visualization can be applied in various real-world scenarios such as:</p>
+            
+            <ul>
+                <li><b>Supply Chain Management:</b>
+                    <ul>
+                        <li>✅ Each node represents a distribution center, and edges denote transportation routes.</li>
+                        <li>✅ The shortest path feature helps identify the quickest delivery route between two centers.</li>
+                    </ul>
+                </li>
+                
+                <li><b>Social Network Analysis:</b>
+                    <ul>
+                        <li>✅ Nodes represent individuals, and edges represent their relationships.</li>
+                        <li>✅ The clustering algorithm groups users into communities based on common connections.</li>
+                    </ul>
+                </li>
+            
+                <li><b>Cybersecurity & Threat Detection:</b>
+                    <ul>
+                        <li>✅ Nodes symbolize servers or devices in a network, while edges denote data flows.</li>
+                        <li>✅ The Depth-First Search (DFS) traversal helps analyze network vulnerabilities.</li>
+                    </ul>
+                </li>
+            
+                <li><b>Smart City Traffic Management:</b>
+                    <ul>
+                        <li>✅ Each node represents a city zone, and edges indicate roads with traffic weights.</li>
+                        <li>✅ The interactive highlighting of routes enables better traffic flow analysis.</li>
+                    </ul>
+                </li>
+            </ul>
+            <hr class="divider">
+
+            <h2 class="fancy-heading">Cytoscape.js Demos</h2>
+            <p>Click on the images to view the demo.</p>
+            <div class="screenshot-container">
+                <a href="https://js.cytoscape.org/demos/tokyo-railways/" target="_blank">
+                    <img src="assets/screenshots/1.png" alt="Tokyo Railways Demo" class="screenshot">
+                </a>
+                <a href="http://www.wineandcheesemap.com/" target="_blank">
+                    <img src="assets/screenshots/2.png" alt="Wine and Cheese Map" class="screenshot">
+                </a>
+            </div>
+            
+            <div class="screenshot-container">
+                <a href="https://js.cytoscape.org/demos/concentric-layout/" target="_blank">
+                    <img src="assets/screenshots/3.png" alt="Concentric Layout Demo" class="screenshot">
+                </a>
+                <a href="https://ivis-at-bilkent.github.io/cytoscape.js-fcose/demo/demo.html" target="_blank">
+                    <img src="assets/screenshots/4.png" alt="Fcose Layout Demo" class="screenshot">
+                </a>
+            </div>            
+
+            <hr class="divider">
+            <!-- Conclusion -->
+            <h2 class="fancy-heading">Conclusion</h2>
+            <p>Cytoscape.js proves to be a powerful and flexible library for network visualization, offering dynamic interactions, real-time analysis, and algorithmic computations like shortest path detection, clustering, and graph traversal. Whether used in scientific research, business intelligence, or urban planning, its versatility makes it an invaluable tool for visualizing complex relationships in a user-friendly and interactive manner.</p>
+            <p>With this foundation, developers can extend the visualization further by integrating real-time data, customizing layouts, or adding AI-driven insights, making network analysis even more insightful and impactful.</p>
+            <hr class="divider">
+
+            <!-- References -->
+            <h3>References</h3>
+            <ol>
+                <li>
+                    <b>Cytoscape.js Official Documentation</b><br>
+                    <a href="https://js.cytoscape.org/" target="_blank">https://js.cytoscape.org/</a><br>
+                    <i>(Primary source for all functionalities and examples.)</i>
+                </li>
+                <br>
+                <li>
+                    <b>Cytoscape.js GitHub Repository</b><br>
+                    <a href="https://github.com/cytoscape/cytoscape.js" target="_blank">https://github.com/cytoscape/cytoscape.js</a><br>
+                    <i>(For the latest updates, issues, and contributions.)</i>
+                </li>
+                <br>
+                <li>
+                    <b>Cytoscape.js Tutorials</b><br>
+                    <a href="https://js.cytoscape.org/#tutorials" target="_blank">https://js.cytoscape.org/#tutorials</a><br>
+                    <i>(Official tutorials covering layouts, styles, and advanced features.)</i>
+                </li>
+                <br>
+                <li>
+                    <b>MDN Web Docs – JavaScript & DOM Manipulation</b><br>
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">https://developer.mozilla.org/en-US/docs/Web/JavaScript</a><br>
+                    <i>(Useful for understanding JavaScript concepts related to Cytoscape.js.)</i>
+                </li>
+                <br>
+                <li>
+                    <b>Stack Overflow – Cytoscape.js Questions</b><br>
+                    <a href="https://stackoverflow.com/questions/tagged/cytoscape.js" target="_blank">https://stackoverflow.com/questions/tagged/cytoscape.js</a><br>
+                    <i>(For troubleshooting and community solutions.)</i>
+                </li>
+            </ol>
+
+        </section>
+    </main>
+
+    <script src="assets/copy.js"></script>
+    <script src="assets/run.js"></script> 
+</body>
+</html>
