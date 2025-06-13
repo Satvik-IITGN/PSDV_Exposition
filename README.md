@@ -1,4 +1,4 @@
-# 📘 Intro to Cytoscapegit 
+# 📘 Intro to Cytoscape.js
 
 This repository serves as a quick-start guide and demo for using **[Cytoscape.js](https://js.cytoscape.org/)** — a lightweight and flexible JavaScript library for graph and network visualization.
 
