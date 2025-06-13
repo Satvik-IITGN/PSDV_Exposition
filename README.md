@@ -4,7 +4,7 @@ This repository serves as a quick-start guide and demo for using **[Cytoscape.js
 
 Cytoscape.js enables developers to build interactive node-edge diagrams entirely in the browser with full control over layout, style, and user interaction. Whether you're visualizing social networks, knowledge graphs, biological data, or organizational charts, Cytoscape.js offers the tools to do it effectively.
 
-## 🔍 What You'll Find Here
+## 🔍 What You'll Find Here:
 - Basic usage examples
 - Styling and layout customization
 - Dynamic graph updates
